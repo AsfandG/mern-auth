@@ -17,3 +17,10 @@ export const authMiddleware = asyncHandler(async (req, res, next) => {
   req.user = user;
   next();
 });
+export const adminMiddleware = asyncHandler(async (req, res, next) => {
+  if (req.user && req.user.role === "admin") {
+    next();
+    return;
+  }
+  res.status(403).json({ message: "Access denied: Admins only." });
+});
