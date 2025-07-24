@@ -14,3 +14,16 @@ export const deleteUser = asyncHandler(async (req, res) => {
     .status(200)
     .json({ success: true, message: "user deleted successfully!" });
 });
+
+export const getAllUsers = asyncHandler(async (req, res) => {
+  const [users, total] = await Promise.all([
+    User.find(),
+    User.countDocuments(),
+  ]);
+
+  if (!users) {
+    res.status(404).json({ success: false, message: "Users not found!" });
+  }
+
+  res.status(200).json({ success: true, total, users });
+});
