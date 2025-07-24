@@ -88,3 +88,41 @@ export const logoutUser = asyncHandler(async (req, res) => {
   res.clearCookie("token");
   res.status(200).json({ message: "User logged out" });
 });
+
+// Get User
+export const getUser = asyncHandler(async (req, res) => {
+  const user = req.user;
+  if (!user) {
+    res.status(404).json({ success: false, message: "User not found" });
+    return;
+  }
+  res.status(200).json({ success: true, user });
+});
+
+// Edit User
+export const UpdateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    res.status(404).json({ success: false, message: "User not found" });
+    return;
+  }
+
+  const { name, bio, photo } = req.body;
+  user.name = name || user.name;
+  user.bio = bio || user.bio;
+  user.photo = photo || user.photo;
+
+  const updatedUser = await user.save();
+  res.status(200).json({
+    success: true,
+    user: {
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      photo: updatedUser.photo,
+      bio: updatedUser.bio,
+      isVerified: updatedUser.isVerified,
+    },
+  });
+});
