@@ -126,3 +126,6 @@ export const UpdateUser = asyncHandler(async (req, res) => {
     },
   });
 });
+
+// Email Verification
+export const verifyEmail = asyncHandler(async (req, res) => {});
